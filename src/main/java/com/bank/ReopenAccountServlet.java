@@ -36,28 +36,30 @@ public class ReopenAccountServlet extends HttpServlet {
 
             response.setContentType("text/html");
             PrintWriter out = response.getWriter();
-            out.println("<html><head><title>Reopen Account</title></head><body>");
+            out.println("<html><head><title>Reopen Account</title>");
+            out.println("<script type='text/javascript'>");
 
             if (rs.next()) {
                 boolean isActive = rs.getBoolean("active");
                 if (isActive) {
-                    out.println("<p>Account is already active.</p>");
+                    out.println("alert('Account is already active.');");
                 } else {
                     PreparedStatement pst = conn.prepareStatement("UPDATE customer SET active = 1 WHERE accountno = ?");
                     pst.setString(1, accountno);
                     int rowCount = pst.executeUpdate();
 
                     if (rowCount > 0) {
-                        out.println("<p>Account reopened successfully.</p>");
+                        out.println("alert('Account reopened successfully.');");
                     } else {
-                        out.println("<p>Failed to reopen account. Please try again.</p>");
+                        out.println("alert('Failed to reopen account. Please try again.');");
                     }
                 }
             } else {
-                out.println("<p>Account not found.</p>");
+                out.println("alert('Account not found.');");
             }
 
-            out.println("</body></html>");
+            out.println("window.location.href = 'adminDashboard.jsp';");
+            out.println("</script></head><body></body></html>");
 
             conn.close();
         } catch (Exception e) {
